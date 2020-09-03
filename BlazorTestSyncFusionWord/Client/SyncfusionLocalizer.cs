@@ -1,14 +1,15 @@
 ﻿using Syncfusion.Blazor;
 using System;
 using System.Collections.Generic;
+using System.Resources;
 using System.Text;
 
 namespace BlazorTestSyncFusionWord.Client
 {
     public class SyncfusionLocalizer : ISyncfusionStringLocalizer
     {
-        // To get the locale key from mapped resources file
-        public string Get(string key)
+
+        public string GetText(string key)
         {
             Console.WriteLine($"get resources {key}");
             return this.Manager.GetString(key);
@@ -24,5 +25,7 @@ namespace BlazorTestSyncFusionWord.Client
                 return Resources.SfResources.ResourceManager;
             }
         }
+
+        public ResourceManager ResourceManager => throw new NotImplementedException();
     }
 }

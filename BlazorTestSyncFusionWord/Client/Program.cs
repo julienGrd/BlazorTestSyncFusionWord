@@ -25,7 +25,7 @@ namespace BlazorTestSyncFusionWord.Client
 
             #region Localization
             // Register the Syncfusion locale service to customize the  SyncfusionBlazor component locale culture
-            builder.Services.AddSingleton(typeof(ISyncfusionStringLocalizer), typeof(SyncfusionLocalizer));
+           // builder.Services.AddSingleton(typeof(ISyncfusionStringLocalizer), typeof(SyncfusionLocalizer));
 
             // Set the default culture of the application
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("fr");

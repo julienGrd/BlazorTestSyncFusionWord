@@ -5,12 +5,12 @@
 @using System.IO;
 @using Newtonsoft.Json;
 <div class="d-flex flex-column">
-    @*<SfSchedule TValue="AppointmentData" Height="650px" SelectedDate="@(new DateTime(2020, 2, 14))">
-        <ScheduleEventSettings DataSource="@DataSource"></ScheduleEventSettings>
-    </SfSchedule>*@
+    @*<Syncfusion.Blazor.Schedule.SfSchedule TValue="AppointmentData" Height="650px" SelectedDate="@(new DateTime(2020, 2, 14))">
+        <Syncfusion.Blazor.Schedule.ScheduleEventSettings DataSource="@DataSource"></Syncfusion.Blazor.Schedule.ScheduleEventSettings>
+    </Syncfusion.Blazor.Schedule.SfSchedule>*@
     <button @onclick="OnSave">Save</button>
     <div class="container-fluid flex-grow-1">
-        <SfDocumentEditorContainer @ref="container" EnableToolbar=true Height="650px" Width="1180px">
+        <SfDocumentEditorContainer @ref="container" EnableToolbar=true Height="650px" Width="1180px" Locale="FR-fr">
             <DocumentEditorContainerEvents Created="OnLoad"></DocumentEditorContainerEvents>
         </SfDocumentEditorContainer>
     </div>
@@ -84,9 +84,9 @@
     private async Task OnSave()
     {
         DocumentEditorModule editor = container.GetDocumentEditor();
-        object base64Data = await editor.SaveAsBlob(FormatType.Docx);
-        Dictionary<string, string> documentContent = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(base64Data.ToString());
-        byte[] data = Convert.FromBase64String(documentContent["data"]);
+        string base64Data = await editor.SaveAsBlob(FormatType.Docx);
+        //Dictionary<string, string> documentContent = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(base64Data.ToString());
+        byte[] data = Convert.FromBase64String(base64Data);
 
         await Http.PostAsJsonAsync<byte[]>("Word/Save", data);
     }

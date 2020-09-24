@@ -28,8 +28,8 @@ namespace BlazorTestSyncFusionWord.Client
             builder.Services.AddSingleton(typeof(ISyncfusionStringLocalizer), typeof(SyncfusionLocalizer));
 
             // Set the default culture of the application
-            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("fr");
-            CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("fr");
+            //CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("fr");
+            //CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("fr");
 
             // Get the modified culture from culture switcher
             //var host = builder.Build();

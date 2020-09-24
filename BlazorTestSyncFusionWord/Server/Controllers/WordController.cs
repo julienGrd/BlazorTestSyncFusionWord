@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Syncfusion.Blazor.DocumentEditor;
+using Syncfusion.EJ2.SpellChecker;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,10 +12,14 @@ using System.Threading.Tasks;
 
 namespace BlazorTestSyncFusionWord.Server.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class WordController : ControllerBase
+    [Route("api/[controller]")]
+    public class WordController : Controller
     {
+        private SpellCheckService _spellCheckService;
+        public WordController(SpellCheckService spellCheckService)
+        {
+            _spellCheckService = spellCheckService;
+        }
 
         [HttpGet]
         public byte[] Get()
@@ -45,5 +51,51 @@ namespace BlazorTestSyncFusionWord.Server.Controllers
             }
             stream.Close();
         }
+
+        [AcceptVerbs("Post")]
+        [HttpPost]
+        [EnableCors("AllowAllOrigins")]
+        [Route("SpellCheck")]
+        public string SpellCheck([FromBody] SpellCheckJsonData spellChecker)
+        {
+            try
+            {
+                SpellChecker spellCheck = new SpellChecker(_spellCheckService.SpellDictCollection);
+                spellCheck.GetSuggestions(spellChecker.LanguageID, spellChecker.TexttoCheck, spellChecker.CheckSpelling, spellChecker.CheckSuggestion, spellChecker.AddWord);
+                return Newtonsoft.Json.JsonConvert.SerializeObject(spellCheck);
+            }
+            catch (Exception ex)
+            {
+                return "{\"SpellCollection\":[],\"HasSpellingError\":false,\"Suggestions\":null}";
+            }
+        }
+
+        [AcceptVerbs("Post")]
+        [HttpPost]
+        [EnableCors("AllowAllOrigins")]
+        [Route("SpellCheckByPage")]
+        public string SpellCheckByPage([FromBody] SpellCheckJsonData spellChecker)
+        {
+            try
+            {
+                SpellChecker spellCheck = new SpellChecker(_spellCheckService.SpellDictCollection);
+                spellCheck.CheckSpelling(spellChecker.LanguageID, spellChecker.TexttoCheck);
+                return Newtonsoft.Json.JsonConvert.SerializeObject(spellCheck);
+            }
+            catch (Exception ex)
+            {
+                return "{\"SpellCollection\":[],\"HasSpellingError\":false,\"Suggestions\":null}";
+            }
+        }
+    }
+
+    public class SpellCheckJsonData
+    {
+        public int LanguageID { get; set; }
+        public string TexttoCheck { get; set; }
+        public bool CheckSpelling { get; set; }
+        public bool CheckSuggestion { get; set; }
+        public bool AddWord { get; set; }
+
     }
 }

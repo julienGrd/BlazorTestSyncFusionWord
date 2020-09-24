@@ -10,8 +10,8 @@
     </Syncfusion.Blazor.Schedule.SfSchedule>*@
     <button @onclick="OnSave">Save</button>
     <div class="container-fluid flex-grow-1">
-        <SfDocumentEditorContainer @ref="container" EnableToolbar=true Height="650px" Width="1180px" Locale="FR-fr">
-            <DocumentEditorContainerEvents Created="OnLoad"></DocumentEditorContainerEvents>
+        <SfDocumentEditorContainer ServiceUrl="https://localhost:5201/api/word/" EnableSpellCheck="true" @ref="container" EnableToolbar=true Height="650px" Width="1180px" Locale="fr">
+            <DocumentEditorContainerEvents Created="OnCreated"></DocumentEditorContainerEvents>
         </SfDocumentEditorContainer>
     </div>
 </div>
@@ -76,9 +76,14 @@
     //    editor.Open(sfdtString);
     //    StateHasChanged();
     //}
-    public void OnLoad(object args)
+    public async Task OnCreated(object args)
     {
-        Load();
+        var spellcheck = container.GetDocumentEditor().GetSpellChecker();
+        // Document Editor provides multi-language spell check support. You can add as many languages (dictionaries) in the server-side and to use that language for spell checking in Document Editor, it must be matched with languageID you pass in the Document Editor.   
+        spellcheck.SetLanguageID(1046);
+        spellcheck.SetRemoveUnderline(false);
+        spellcheck.SetAllowSpellCheckAndSuggestion(true);
+        await Load();
     }
 
     private async Task OnSave()
@@ -88,12 +93,12 @@
         //Dictionary<string, string> documentContent = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(base64Data.ToString());
         byte[] data = Convert.FromBase64String(base64Data);
 
-        await Http.PostAsJsonAsync<byte[]>("Word/Save", data);
+        await Http.PostAsJsonAsync<byte[]>("api/word/save", data);
     }
 
     private async Task Load()
     {
-        var byteArray = await Http.GetFromJsonAsync<byte[]>("Word");
+        var byteArray = await Http.GetFromJsonAsync<byte[]>("api/word");
         Stream stream = new MemoryStream(byteArray);
         Console.WriteLine("memory stream build");
         WordDocument document = WordDocument.Load(stream, ImportFormatType.Docx);

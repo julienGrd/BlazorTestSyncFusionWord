@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
+using Syncfusion.EJ2.SpellChecker;
 
 namespace BlazorTestSyncFusionWord.Server
 {
@@ -25,10 +26,22 @@ namespace BlazorTestSyncFusionWord.Server
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.AddSingleton(typeof(SpellCheckService));
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, SpellCheckService pSpellCheckService)
         {
             if (env.IsDevelopment())
             {
@@ -41,13 +54,15 @@ namespace BlazorTestSyncFusionWord.Server
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            
+            pSpellCheckService.Load(env.ContentRootPath);
 
             app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseCors("AllowAllOrigins");
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();

@@ -6,7 +6,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="5.0.0-rc.1.20451.17" />
-    <PackageReference Include="Syncfusion.Blazor.WordProcessor" Version="18.2.0.58" />
+    <PackageReference Include="Syncfusion.Blazor.WordProcessor" Version="18.2.0.59" />
+    <PackageReference Include="Syncfusion.EJ2.SpellChecker.AspNet.Core" Version="18.2.0.59" />
     <!--<PackageReference Include="Syncfusion.Blazor" Version="18.2.0.56" />
     <PackageReference Include="Syncfusion.Blazor.WordProcessor" Version="18.2.0.56" />
     <PackageReference Include="Syncfusion.HtmlToPdfConverter.QtWebKit.Net.Core" Version="18.2.0.44" />-->
@@ -15,6 +16,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Client\BlazorTestSyncFusionWord.Client.csproj" />
     <ProjectReference Include="..\Shared\BlazorTestSyncFusionWord.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="App_Data\" />
   </ItemGroup>
 
 
